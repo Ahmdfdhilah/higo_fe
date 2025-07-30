@@ -6,7 +6,9 @@ import {
   CustomerTable, 
   CustomerCards, 
   CustomerFilters,
-  CustomerStats
+  CustomerStats,
+  CustomerDialog,
+  CustomerDeleteDialog
 } from '@/components/customer';
 import { Button } from '@/components/ui/button';
 import { 
@@ -43,6 +45,13 @@ export default function CustomersPage() {
   const [pageSize, setPageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<CustomerFiltersType>({});
+  
+  // Dialog states
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMode, setDialogMode] = useState<'create' | 'edit' | 'view'>('create');
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerResponseDto | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState<CustomerResponseDto | null>(null);
 
   const { 
     customers, 
@@ -81,23 +90,26 @@ export default function CustomersPage() {
   };
 
   const handleViewCustomer = (customer: CustomerResponseDto) => {
-    // TODO: Navigate to customer detail page or open modal
-    console.log('View customer:', customer);
+    setSelectedCustomer(customer);
+    setDialogMode('view');
+    setDialogOpen(true);
   };
 
   const handleEditCustomer = (customer: CustomerResponseDto) => {
-    // TODO: Navigate to customer edit page or open modal
-    console.log('Edit customer:', customer);
+    setSelectedCustomer(customer);
+    setDialogMode('edit');
+    setDialogOpen(true);
   };
 
   const handleDeleteCustomer = (customer: CustomerResponseDto) => {
-    // TODO: Show confirmation dialog and delete customer
-    console.log('Delete customer:', customer);
+    setCustomerToDelete(customer);
+    setDeleteDialogOpen(true);
   };
 
   const handleAddCustomer = () => {
-    // TODO: Navigate to add customer page or open modal
-    console.log('Add new customer');
+    setSelectedCustomer(null);
+    setDialogMode('create');
+    setDialogOpen(true);
   };
 
   const handleExport = () => {
@@ -289,6 +301,30 @@ export default function CustomersPage() {
           </CardContent>
         </Card>
       </div>
+      
+      {/* Customer Dialog */}
+      <CustomerDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        mode={dialogMode}
+        customer={selectedCustomer}
+        onSuccess={() => {
+          refetch();
+          setDialogOpen(false);
+        }}
+      />
+      
+      {/* Delete Confirmation Dialog */}
+      <CustomerDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        customer={customerToDelete}
+        onSuccess={() => {
+          refetch();
+          setDeleteDialogOpen(false);
+          setCustomerToDelete(null);
+        }}
+      />
     </DashboardLayout>
   );
 }

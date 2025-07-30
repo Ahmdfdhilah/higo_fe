@@ -31,6 +31,15 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { CustomerResponseDto } from '@/services/customer';
+import {
+  getGenderColor,
+  getDeviceBrandColor,
+  getLocationTypeColor,
+  getDeviceBrandLabel,
+  getDigitalInterestLabel,
+  getLocationTypeLabel,
+  getGenderLabel
+} from '@/lib/customerUtils';
 
 interface CustomerTableProps {
   customers: CustomerResponseDto[];
@@ -40,34 +49,6 @@ interface CustomerTableProps {
   onDelete?: (customer: CustomerResponseDto) => void;
 }
 
-const getGenderColor = (gender: string) => {
-  switch (gender) {
-    case 'male': return 'bg-blue-100 text-blue-800';
-    case 'female': return 'bg-pink-100 text-pink-800';
-    default: return 'bg-gray-100 text-gray-800';
-  }
-};
-
-const getDeviceBrandColor = (device: string) => {
-  switch (device) {
-    case 'samsung': return 'bg-blue-100 text-blue-800';
-    case 'apple': return 'bg-gray-100 text-gray-800';
-    case 'huawei': return 'bg-red-100 text-red-800';
-    case 'xiaomi': return 'bg-orange-100 text-orange-800';
-    case 'oppo': return 'bg-green-100 text-green-800';
-    case 'vivo': return 'bg-purple-100 text-purple-800';
-    default: return 'bg-gray-100 text-gray-800';
-  }
-};
-
-const getLocationTypeColor = (locationType: string) => {
-  switch (locationType) {
-    case 'urban': return 'bg-green-100 text-green-800';
-    case 'suburban': return 'bg-yellow-100 text-yellow-800';
-    case 'rural': return 'bg-orange-100 text-orange-800';
-    default: return 'bg-gray-100 text-gray-800';
-  }
-};
 
 export function CustomerTable({ 
   customers, 
@@ -239,7 +220,7 @@ export function CustomerTable({
                       variant="secondary" 
                       className={`text-xs ${getLocationTypeColor(customer.locationType)}`}
                     >
-                      {customer.locationType}
+                      {getLocationTypeLabel(customer.locationType)}
                     </Badge>
                   </div>
                 </TableCell>
@@ -250,7 +231,7 @@ export function CustomerTable({
                       variant="secondary" 
                       className={`text-xs ${getGenderColor(customer.gender)}`}
                     >
-                      {customer.gender}
+                      {getGenderLabel(customer.gender)}
                     </Badge>
                     <div className="text-xs text-muted-foreground">
                       {customer.actualAge} years
@@ -263,13 +244,13 @@ export function CustomerTable({
                     variant="secondary" 
                     className={`text-xs ${getDeviceBrandColor(customer.deviceBrand)}`}
                   >
-                    {customer.deviceBrand}
+                    {getDeviceBrandLabel(customer.deviceBrand)}
                   </Badge>
                 </TableCell>
 
                 <TableCell>
                   <Badge variant="outline" className="text-xs">
-                    {customer.digitalInterest}
+                    {getDigitalInterestLabel(customer.digitalInterest)}
                   </Badge>
                 </TableCell>
 
