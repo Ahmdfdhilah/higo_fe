@@ -1,28 +1,16 @@
-import { ScrollArea, ScrollBar } from '@workspace/ui/components/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarFooter } from './SidebarFooter';
 import { SidebarMenuItem } from './SidebarMenuItem';
-import { getMenuItemsForUser } from '@/lib/menus';
-
-interface SidebarItem {
-  title: string;
-  href?: string;
-  icon: any;
-  children?: SidebarItem[];
-  isPlaceholder?: boolean;
-  allowedRoles?: string[];
-  badge?: string;
-}
-import { cn } from '@workspace/ui/lib/utils';
-import { useMemo } from 'react';
-import { useRole } from '@/hooks/useRole';
+import { menuItems, MenuItem } from '@/lib/menus';
+import { cn } from '@/lib/utils';
 
 interface SidebarContentProps {
   collapsed?: boolean;
   expandedMenus: string[];
   onToggleCollapse: () => void;
   onToggleSubmenu: (title: string) => void;
-  onMenuClick: (item: SidebarItem) => void;
+  onMenuClick: (item: MenuItem) => void;
   onLinkClick: () => void;
 }
 
@@ -34,13 +22,6 @@ export function SidebarContent({
   onMenuClick,
   onLinkClick 
 }: SidebarContentProps) {
-  // Get current role
-  const { currentRole } = useRole();
-  
-  // Get appropriate menu items based on current role
-  const menuItems = useMemo(() => {
-    return getMenuItemsForUser([currentRole]) as SidebarItem[];
-  }, [currentRole]);
 
   return (
     <div className="flex h-full flex-col">

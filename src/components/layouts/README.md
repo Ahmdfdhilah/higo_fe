@@ -1,21 +1,19 @@
 # Layout Components
 
-Dokumentasi untuk komponen layout yang menggunakan sistem tema konsisten.
+Dokumentasi untuk komponen layout yang menggunakan sistem tema konsisten untuk aplikasi Next.js.
 
 ## Struktur Layout
 
 ### DefaultLayout
-Layout default untuk halaman publik dengan:
-- **Navbar**: Responsive dengan navigasi desktop/mobile
-- **Main Content**: Area konten utama
-- **Footer**: Footer multi-kolom dengan informasi perusahaan
+Layout sederhana untuk halaman publik:
+- **Main Content**: Area konten utama dengan min-height full screen
 
-### AdminLayout  
-Layout admin dengan sidebar untuk dashboard:
-- **Sidebar**: Fixed sidebar dengan navigasi admin
-- **Header**: Search bar, notifikasi, dan user profile
-- **Main Content**: Area konten admin
-- **Footer**: Footer sederhana untuk admin
+### DashboardLayout  
+Layout dashboard dengan sidebar untuk aplikasi admin:
+- **Sidebar**: Fixed sidebar dengan navigasi yang dapat di-collapse
+- **Mobile Header**: Header responsive untuk mobile dengan toggle sidebar
+- **Main Content**: Area konten utama dengan padding yang responsif
+- **Footer**: Footer sederhana untuk dashboard
 
 ## Sistem Warna Tema
 
@@ -157,17 +155,18 @@ function HomePage() {
 }
 ```
 
-### AdminLayout
+### DashboardLayout
 ```tsx
-import { AdminLayout } from './components/layouts';
+import { DashboardLayout } from './components/layouts';
 
 function AdminDashboard() {
   return (
-    <AdminLayout>
-      <div className="container mx-auto px-4">
+    <DashboardLayout>
+      <div className="space-y-6">
         <h1 className="text-3xl font-bold">Dashboard</h1>
+        {/* Your dashboard content */}
       </div>
-    </AdminLayout>
+    </DashboardLayout>
   );
 }
 ```

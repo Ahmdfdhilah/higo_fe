@@ -1,8 +1,8 @@
-// apps/vite-react-app/src/components/layouts/DashboardLayout/UserDropdown.tsx
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@workspace/ui/components/button';
-import { Avatar, AvatarFallback } from '@workspace/ui/components/avatar';
-import { useToast } from '@workspace/ui/components/sonner';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { toast } from 'sonner';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,17 +10,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@workspace/ui/components/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import {
   ChevronDown,
   LogOut,
   User,
   Loader2,
 } from 'lucide-react';
-import { cn } from '@workspace/ui/lib/utils';
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
-import { useRole } from '@/hooks/useRole';
-import { useAuth } from '@/components/Auth/AuthProvider';
 
 interface UserDropdownProps {
   collapsed?: boolean;
@@ -28,12 +26,16 @@ interface UserDropdownProps {
 }
 
 export function UserDropdown({ collapsed = false, className }: UserDropdownProps) {
-  const { user, logout, loading } = useAuth();
-  const { currentRole } = useRole();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { toast } = useToast();
+  const router = useRouter();
 
-  const navigate = useNavigate();
+  // Mock user data - replace with real auth
+  const user = {
+    nama: 'John Doe',
+    email: 'john@example.com',
+    is_active: true
+  };
+  const loading = false;
 
   // Get user initials for avatar fallback
   const getUserInitials = () => {
@@ -52,36 +54,15 @@ export function UserDropdown({ collapsed = false, className }: UserDropdownProps
     return name.substring(0, maxLength - 3) + '...';
   };
 
-  // Get user role display with truncation
-  const getUserRole = (maxLength = 15) => {
-    let role;
-    switch (currentRole) {
-      case 'ADMIN':
-        role = 'Administrator';
-        break;
-      case 'INSPEKTORAT':
-        role = 'Inspektorat';
-        break;
-      case 'PERWADAG':
-        role = 'Perwadag';
-        break;
-      default:
-        role = currentRole;
-    }
-    if (role && role.length <= maxLength) return role;
-    return role ? role.substring(0, maxLength - 3) + '...' : '';
-  };
 
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true);
-      await logout();
-      toast({
-        title: 'Logout berhasil',
+      // Add your logout logic here
+      toast('Logout berhasil', {
         description: 'Anda telah berhasil keluar dari sistem.',
-        variant: 'default'
       });
-      navigate('/login', { replace: true });
+      router.push('/login');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -132,11 +113,6 @@ export function UserDropdown({ collapsed = false, className }: UserDropdownProps
                   <span className="text-sm font-medium text-sidebar-foreground truncate max-w-[120px]" title={user?.nama}>
                     {getUserDisplayName(18)}
                   </span>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs text-muted-foreground truncate max-w-[100px]" title={getUserRole(50)}>
-                      {getUserRole(12)}
-                    </span>
-                  </div>
                 </div>
                 <ChevronDown className="h-4 w-4 flex-shrink-0" />
               </>
@@ -149,15 +125,13 @@ export function UserDropdown({ collapsed = false, className }: UserDropdownProps
             <div className="flex flex-col space-y-1">
               <span className="font-medium truncate" title={user?.nama}>{getUserDisplayName(25)}</span>
               {user.email && <span className="text-xs text-muted-foreground truncate" title={user.email}>{user.email}</span>}
-              <span className="text-xs text-muted-foreground truncate" title={getUserRole(50)}>{getUserRole(20)}</span>
-              {user.inspektorat && <span className="text-xs text-muted-foreground truncate" title={user.inspektorat}>{user.inspektorat}</span>}
             </div>
           </DropdownMenuLabel>
 
           <DropdownMenuSeparator />
 
           <DropdownMenuItem asChild>
-            <Link to="/profile" className="flex items-center">
+            <Link href="/profile" className="flex items-center">
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </Link>

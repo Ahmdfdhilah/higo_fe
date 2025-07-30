@@ -1,4 +1,4 @@
-import { Button } from '@workspace/ui/components/button';
+import { Button } from '@/components/ui/button';
 import { UserDropdown } from './UserDropdown';
 import { Menu } from 'lucide-react';
 

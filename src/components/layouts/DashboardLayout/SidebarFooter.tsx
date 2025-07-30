@@ -1,5 +1,5 @@
 import { UserDropdown } from './UserDropdown';
-import { cn } from '@workspace/ui/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface SidebarFooterProps {
   collapsed: boolean;

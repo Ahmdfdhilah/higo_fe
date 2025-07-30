@@ -1,7 +1,8 @@
 
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
-import { cn } from '@workspace/ui/lib/utils';
+import { cn } from '@/lib/utils';
 
 // Generic SidebarItem interface that supports both menu types
 interface GenericSidebarItem {
@@ -30,14 +31,14 @@ export function SidebarMenuItem({
   onMenuClick, 
   onLinkClick 
 }: SidebarMenuItemProps) {
-  const location = useLocation();
+  const pathname = usePathname();
   
   const isMenuExpanded = (title: string) => expandedMenus.includes(title);
   
   const isActive = (item: GenericSidebarItem): boolean => {
-    if (item.href && location.pathname === item.href) return true;
+    if (item.href && pathname === item.href) return true;
     if (item.children) {
-      return item.children.some(child => location.pathname === child.href);
+      return item.children.some(child => pathname === child.href);
     }
     return false;
   };
@@ -74,10 +75,10 @@ export function SidebarMenuItem({
             {item.children!.map((child) => (
               <Link
                 key={child.href}
-                to={child.href!}
+                href={child.href!}
                 className={cn(
                   'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                  location.pathname === child.href
+                  pathname === child.href
                     ? 'bg-sidebar-primary/80 text-sidebar-primary-foreground'
                     : 'text-sidebar-foreground hover:bg-sidebar-accent/30 hover:text-sidebar-accent-foreground'
                 )}
@@ -96,7 +97,7 @@ export function SidebarMenuItem({
   return (
     <div className="mb-2">
       <Link
-        to={item.href!}
+        href={item.href!}
         className={cn(
           'flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
           collapsed ? 'justify-center' : 'space-x-3',

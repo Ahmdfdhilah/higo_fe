@@ -1,6 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@workspace/ui/components/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 
 interface GenericSidebarItem {
   title: string;
@@ -11,7 +10,7 @@ interface GenericSidebarItem {
   allowedRoles?: string[];
   badge?: string;
 }
-import { cn } from '@workspace/ui/lib/utils';
+import { cn } from '@/lib/utils';
 import { SidebarContent } from './SidebarContent';
 import { MobileHeader } from './MobileHeader';
 import { DashboardFooter } from './DashboardFooter';
@@ -97,7 +96,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Page Content */}
         <main className="flex-1 min-h-0">
           <div className="py-3 lg:py-6 px-3 sm:px-4 lg:px-6 xl:px-8">
-            {children || <Outlet />}
+            {children}
           </div>
         </main>
 

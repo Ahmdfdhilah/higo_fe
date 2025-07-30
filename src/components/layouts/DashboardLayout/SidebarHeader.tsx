@@ -1,12 +1,7 @@
-import { Link } from 'react-router-dom';
-import { Button } from '@workspace/ui/components/button';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@workspace/ui/lib/utils';
-import { useTheme } from '@/hooks/useTheme';
-import logoLightMode from '@/assets/logoLightMode.png';
-import logoDarkMode from '@/assets/logoDarkMode.png';
-import logoMiniLightMode from '@/assets/logoMiniLightMode.png';
-import logoMiniDarkMode from '@/assets/logoMiniDarkMode.png';
+import { cn } from '@/lib/utils';
 
 interface SidebarHeaderProps {
   collapsed: boolean;
@@ -14,19 +9,14 @@ interface SidebarHeaderProps {
 }
 
 export function SidebarHeader({ collapsed, onToggleCollapse }: SidebarHeaderProps) {
-  const { isDarkMode } = useTheme();
   
   return (
     <>
       <div className={cn("flex h-14 lg:h-16 items-center flex-shrink-0 border-b border-sidebar-border", collapsed ? "px-2 lg:px-3 justify-center" : "px-4 lg:px-6 justify-between")}>
-        <Link to="/" className={cn("flex items-center min-w-0", collapsed ? "justify-center" : "space-x-2")}>
-          <img 
-            src={collapsed ? (isDarkMode ? logoMiniDarkMode : logoMiniLightMode) : (isDarkMode ? logoDarkMode : logoLightMode)} 
-            className={cn("transition-all duration-300 object-contain", collapsed ? "w-7 h-7 lg:w-8 lg:h-8" : "w-32 lg:w-36 h-12")} 
-            alt="logo kemendag" 
-            width={collapsed ? "32" : "144"}
-            height={collapsed ? "32" : "48"}
-          />
+        <Link href="/" className={cn("flex items-center min-w-0", collapsed ? "justify-center" : "space-x-2")}>
+          <div className={cn("transition-all duration-300 bg-primary text-primary-foreground rounded-lg flex items-center justify-center font-bold", collapsed ? "w-8 h-8 text-sm" : "w-32 h-12 text-xl")}>
+            {collapsed ? 'H' : 'Higo'}
+          </div>
         </Link>
         {!collapsed && (
           <Button
