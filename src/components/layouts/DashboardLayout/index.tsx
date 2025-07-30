@@ -1,3 +1,4 @@
+'use client'
 import { ReactNode, useState } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 

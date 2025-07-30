@@ -25,7 +25,7 @@ export interface PaginatedResponse<T> {
 export class BaseApiService {
   protected api: AxiosInstance;
 
-  constructor(baseURL: string = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') {
+  constructor(baseURL: string = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000') {
     this.api = axios.create({
       baseURL: `${baseURL}/api`,
       timeout: 30000,
