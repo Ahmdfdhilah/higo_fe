@@ -62,7 +62,7 @@ export function UserDropdown({ collapsed = false, className }: UserDropdownProps
       toast('Logout berhasil', {
         description: 'Anda telah berhasil keluar dari sistem.',
       });
-      router.push('/login');
+      // router.push('/login');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {

@@ -30,9 +30,7 @@ import { useCustomers } from '@/hooks/useCustomers';
 import { 
   Grid3X3, 
   List, 
-  Plus, 
-  Download, 
-  Upload,
+  Plus,
   RefreshCw
 } from 'lucide-react';
 import { CustomerResponseDto, CustomerFilters as CustomerFiltersType } from '@/services/customer';
@@ -112,15 +110,6 @@ export default function CustomersPage() {
     setDialogOpen(true);
   };
 
-  const handleExport = () => {
-    // TODO: Export customers data
-    console.log('Export customers');
-  };
-
-  const handleImport = () => {
-    // TODO: Open import dialog
-    console.log('Import customers');
-  };
 
   const getStatusMessage = () => {
     if (error) return `Error: ${error}`;
@@ -145,14 +134,6 @@ export default function CustomersPage() {
           </div>
           
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleImport}>
-              <Upload className="mr-2 h-4 w-4" />
-              Import
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleExport}>
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
             <Button size="sm" onClick={handleAddCustomer}>
               <Plus className="mr-2 h-4 w-4" />
               Add Customer

@@ -1,113 +1,313 @@
-import { DashboardLayout } from "@/components/layouts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, Users, Package, CreditCard } from "lucide-react";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import { DashboardLayout } from '@/components/layouts/DashboardLayout';
+import {
+  CustomerTable,
+  CustomerCards,
+  CustomerFilters,
+  CustomerStats,
+  CustomerDialog,
+  CustomerDeleteDialog
+} from '@/components/customer';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useCustomers } from '@/hooks/useCustomers';
+import {
+  Grid3X3,
+  List,
+  Plus,
+  Download,
+  Upload,
+  RefreshCw
+} from 'lucide-react';
+import { CustomerResponseDto, CustomerFilters as CustomerFiltersType } from '@/services/customer';
+
+type ViewMode = 'table' | 'cards';
+
+export default function CustomersPage() {
+  const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<CustomerFiltersType>({});
+
+  // Dialog states
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMode, setDialogMode] = useState<'create' | 'edit' | 'view'>('create');
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerResponseDto | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState<CustomerResponseDto | null>(null);
+
+  const {
+    customers,
+    summary,
+    isLoading,
+    error,
+    totalPages,
+    totalCustomers,
+    refetch
+  } = useCustomers({
+    pagination: {
+      page: currentPage,
+      size: pageSize,
+      search: searchQuery
+    },
+    filters
+  });
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (size: string) => {
+    setPageSize(parseInt(size));
+    setCurrentPage(1); // Reset to first page when changing page size
+  };
+
+  const handleSearch = (search: string) => {
+    setSearchQuery(search);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleFiltersChange = (newFilters: CustomerFiltersType) => {
+    setFilters(newFilters);
+    setCurrentPage(1); // Reset to first page when filtering
+  };
+
+  const handleViewCustomer = (customer: CustomerResponseDto) => {
+    setSelectedCustomer(customer);
+    setDialogMode('view');
+    setDialogOpen(true);
+  };
+
+  const handleEditCustomer = (customer: CustomerResponseDto) => {
+    setSelectedCustomer(customer);
+    setDialogMode('edit');
+    setDialogOpen(true);
+  };
+
+  const handleDeleteCustomer = (customer: CustomerResponseDto) => {
+    setCustomerToDelete(customer);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleAddCustomer = () => {
+    setSelectedCustomer(null);
+    setDialogMode('create');
+    setDialogOpen(true);
+  };
+
+
+
+  const getStatusMessage = () => {
+    if (error) return `Error: ${error}`;
+    if (isLoading) return 'Loading customers...';
+    if (totalCustomers === 0) return 'No customers found';
+
+    const start = (currentPage - 1) * pageSize + 1;
+    const end = Math.min(currentPage * pageSize, totalCustomers);
+    return `Showing ${start}-${end} of ${totalCustomers} customers`;
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Welcome to your dashboard. Here's what's happening with your business today.
-          </p>
+        {/* Page Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Customers</h1>
+            <p className="text-muted-foreground">
+              Manage and view your customer database
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button size="sm" onClick={handleAddCustomer}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Customer
+            </Button>
+          </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <CreditCard className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
-              <p className="text-xs text-muted-foreground">
-                +20.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Users</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
-              <p className="text-xs text-muted-foreground">
-                +180.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sales</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
-              <p className="text-xs text-muted-foreground">
-                +19% from last month
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Products</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+573</div>
-              <p className="text-xs text-muted-foreground">
-                +201 since last hour
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Stats Overview */}
+        <CustomerStats summary={summary} isLoading={isLoading} />
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-4">
-            <CardHeader>
-              <CardTitle>Overview</CardTitle>
-            </CardHeader>
-            <CardContent className="pl-2">
-              <div className="h-[200px] flex items-center justify-center text-muted-foreground">
-                Chart placeholder - integrate with your preferred charting library
+        {/* Main Content */}
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <CardTitle className="text-lg">Customer List</CardTitle>
+                <CardDescription>{getStatusMessage()}</CardDescription>
               </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="col-span-3">
-            <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
-              <CardDescription>
-                You made 265 sales this month.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-8">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="flex items-center">
-                    <div className="ml-4 space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        Customer {i}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        customer{i}@example.com
-                      </p>
-                    </div>
-                    <div className="ml-auto font-medium">
-                      +$1,999.00
-                    </div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={refetch}
+                  disabled={isLoading}
+                >
+                  <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                  Refresh
+                </Button>
+
+                {/* View Mode Toggle */}
+                <div className="flex items-center border rounded-md">
+                  <Button
+                    variant={viewMode === 'table' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('table')}
+                    className="rounded-r-none"
+                  >
+                    <List className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === 'cards' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('cards')}
+                    className="rounded-l-none"
+                  >
+                    <Grid3X3 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            {/* Filters */}
+            <CustomerFilters
+              filters={filters}
+              onFiltersChange={handleFiltersChange}
+              onSearch={handleSearch}
+              searchQuery={searchQuery}
+            />
+
+            {/* Content based on view mode */}
+            {viewMode === 'table' ? (
+              <CustomerTable
+                customers={customers}
+                isLoading={isLoading}
+                onView={handleViewCustomer}
+                onEdit={handleEditCustomer}
+                onDelete={handleDeleteCustomer}
+              />
+            ) : (
+              <CustomerCards
+                customers={customers}
+                isLoading={isLoading}
+                onView={handleViewCustomer}
+                onEdit={handleEditCustomer}
+                onDelete={handleDeleteCustomer}
+              />
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">Rows per page:</span>
+                  <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
+                    <SelectTrigger className="w-20">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="5">5</SelectItem>
+                      <SelectItem value="10">10</SelectItem>
+                      <SelectItem value="20">20</SelectItem>
+                      <SelectItem value="50">50</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage <= 1 || isLoading}
+                  >
+                    Previous
+                  </Button>
+
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      const pageNumber = currentPage <= 3
+                        ? i + 1
+                        : currentPage >= totalPages - 2
+                          ? totalPages - 4 + i
+                          : currentPage - 2 + i;
+
+                      if (pageNumber < 1 || pageNumber > totalPages) return null;
+
+                      return (
+                        <Button
+                          key={pageNumber}
+                          variant={currentPage === pageNumber ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => handlePageChange(pageNumber)}
+                          disabled={isLoading}
+                          className="w-10"
+                        >
+                          {pageNumber}
+                        </Button>
+                      );
+                    })}
                   </div>
-                ))}
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage >= totalPages || isLoading}
+                  >
+                    Next
+                  </Button>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Customer Dialog */}
+      <CustomerDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        mode={dialogMode}
+        customer={selectedCustomer}
+        onSuccess={() => {
+          refetch();
+          setDialogOpen(false);
+        }}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <CustomerDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        customer={customerToDelete}
+        onSuccess={() => {
+          refetch();
+          setDeleteDialogOpen(false);
+          setCustomerToDelete(null);
+        }}
+      />
     </DashboardLayout>
   );
 }
