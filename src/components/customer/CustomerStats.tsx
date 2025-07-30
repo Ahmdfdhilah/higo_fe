@@ -2,10 +2,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Users, 
-  MapPin, 
-  TrendingUp, 
+import {
+  Users,
+  MapPin,
+  TrendingUp,
   Smartphone,
   User,
   Calendar
@@ -46,10 +46,10 @@ export function CustomerStats({ summary, isLoading }: CustomerStatsProps) {
     if (!summary.dateRange.earliest || !summary.dateRange.latest) {
       return 'No data';
     }
-    
+
     const earliest = new Date(summary.dateRange.earliest);
     const latest = new Date(summary.dateRange.latest);
-    
+
     return `${earliest.toLocaleDateString()} - ${latest.toLocaleDateString()}`;
   };
 
@@ -64,7 +64,7 @@ export function CustomerStats({ summary, isLoading }: CustomerStatsProps) {
   const getTopDevice = () => {
     const devices = summary.deviceDistribution;
     const entries = Object.entries(devices);
-    const max = entries.reduce((prev, current) => 
+    const max = entries.reduce((prev, current) =>
       prev[1] > current[1] ? prev : current
     );
     return { label: max[0], count: max[1] };
@@ -73,7 +73,7 @@ export function CustomerStats({ summary, isLoading }: CustomerStatsProps) {
   const getTopLocation = () => {
     const locations = summary.locationDistribution;
     const entries = Object.entries(locations);
-    const max = entries.reduce((prev, current) => 
+    const max = entries.reduce((prev, current) =>
       prev[1] > current[1] ? prev : current
     );
     return { label: max[0], count: max[1] };
@@ -82,7 +82,7 @@ export function CustomerStats({ summary, isLoading }: CustomerStatsProps) {
   const getTopInterest = () => {
     const interests = summary.interestDistribution;
     const entries = Object.entries(interests);
-    const max = entries.reduce((prev, current) => 
+    const max = entries.reduce((prev, current) =>
       prev[1] > current[1] ? prev : current
     );
     return { label: max[0], count: max[1] };
@@ -160,7 +160,7 @@ export function CustomerStats({ summary, isLoading }: CustomerStatsProps) {
                 <Badge variant="secondary">{getTopGender().label}</Badge>
                 <span className="text-sm font-medium">{getTopGender().count}</span>
               </div>
-              
+
               <div className="space-y-1">
                 <div className="flex justify-between text-xs">
                   <span>Male</span>
@@ -170,12 +170,6 @@ export function CustomerStats({ summary, isLoading }: CustomerStatsProps) {
                   <span>Female</span>
                   <span>{summary.genderDistribution.female}</span>
                 </div>
-                {summary.genderDistribution.other && (
-                  <div className="flex justify-between text-xs">
-                    <span>Other</span>
-                    <span>{summary.genderDistribution.other}</span>
-                  </div>
-                )}
               </div>
             </div>
           </CardContent>
@@ -194,10 +188,10 @@ export function CustomerStats({ summary, isLoading }: CustomerStatsProps) {
                 <Badge variant="secondary" className="capitalize">{getTopDevice().label}</Badge>
                 <span className="text-sm font-medium">{getTopDevice().count}</span>
               </div>
-              
+
               <div className="space-y-1">
                 {Object.entries(summary.deviceDistribution)
-                  .sort(([,a], [,b]) => b - a)
+                  .sort(([, a], [, b]) => b - a)
                   .slice(0, 3)
                   .map(([device, count]) => (
                     <div key={device} className="flex justify-between text-xs">
@@ -224,10 +218,10 @@ export function CustomerStats({ summary, isLoading }: CustomerStatsProps) {
                 <Badge variant="secondary" className="capitalize">{getTopLocation().label}</Badge>
                 <span className="text-sm font-medium">{getTopLocation().count}</span>
               </div>
-              
+
               <div className="space-y-1">
                 {Object.entries(summary.locationDistribution)
-                  .sort(([,a], [,b]) => b - a)
+                  .sort(([, a], [, b]) => b - a)
                   .map(([location, count]) => (
                     <div key={location} className="flex justify-between text-xs">
                       <span className="capitalize">{location}</span>
@@ -253,10 +247,10 @@ export function CustomerStats({ summary, isLoading }: CustomerStatsProps) {
                 <Badge variant="secondary" className="capitalize">{getTopInterest().label}</Badge>
                 <span className="text-sm font-medium">{getTopInterest().count}</span>
               </div>
-              
+
               <div className="space-y-1">
                 {Object.entries(summary.interestDistribution)
-                  .sort(([,a], [,b]) => b - a)
+                  .sort(([, a], [, b]) => b - a)
                   .slice(0, 3)
                   .map(([interest, count]) => (
                     <div key={interest} className="flex justify-between text-xs">
