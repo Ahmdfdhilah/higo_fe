@@ -44,7 +44,10 @@ Thumbs.db
 *.local
 .vercel
 
+# Next.js build output
+.next/
+out/
+
 # Claude files
+.claude/
 CLAUDE.MD
-claude
-.next
