@@ -1,15 +1,7 @@
 import { ReactNode, useState } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 
-interface GenericSidebarItem {
-  title: string;
-  href?: string;
-  icon: any;
-  children?: GenericSidebarItem[];
-  isPlaceholder?: boolean;
-  allowedRoles?: string[];
-  badge?: string;
-}
+import { MenuItem } from '@/lib/menus';
 import { cn } from '@/lib/utils';
 import { SidebarContent } from './SidebarContent';
 import { MobileHeader } from './MobileHeader';
@@ -32,7 +24,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     );
   };
 
-  const handleMenuClick = (item: GenericSidebarItem) => {
+  const handleMenuClick = (item: MenuItem) => {
     if (item.children && item.children.length > 0) {
       if (isCollapsed) {
         setIsCollapsed(false);

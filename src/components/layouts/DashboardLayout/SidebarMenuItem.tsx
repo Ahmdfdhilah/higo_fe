@@ -4,23 +4,14 @@ import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// Generic SidebarItem interface that supports both menu types
-interface GenericSidebarItem {
-  title: string;
-  href?: string;
-  icon: any;
-  children?: GenericSidebarItem[];
-  isPlaceholder?: boolean;
-  allowedRoles?: string[]; // Optional
-  badge?: string; // Optional 
-}
+import { MenuItem } from '@/lib/menus';
 
 interface SidebarMenuItemProps {
-  item: GenericSidebarItem;
+  item: MenuItem;
   collapsed: boolean;
   expandedMenus: string[];
   onToggleSubmenu: (title: string) => void;
-  onMenuClick: (item: GenericSidebarItem) => void;
+  onMenuClick: (item: MenuItem) => void;
   onLinkClick: () => void;
 }
 
@@ -35,7 +26,7 @@ export function SidebarMenuItem({
   
   const isMenuExpanded = (title: string) => expandedMenus.includes(title);
   
-  const isActive = (item: GenericSidebarItem): boolean => {
+  const isActive = (item: MenuItem): boolean => {
     if (item.href && pathname === item.href) return true;
     if (item.children) {
       return item.children.some(child => pathname === child.href);
