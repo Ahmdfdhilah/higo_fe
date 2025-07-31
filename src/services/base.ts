@@ -38,7 +38,7 @@ export class BaseApiService {
   }
 
   private setupInterceptors() {
-    // Request interceptor
+    // Request interceptorr
     this.api.interceptors.request.use(
       (config) => {
         // Add auth token if available
